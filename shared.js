@@ -103,23 +103,83 @@ else window.addEventListener("vanta-fb-ready", hookAuth);
 // ============================================================
 window.VantaDemo = {
   enabled: () => !window.VANTA_READY,
+  
+  // Store users in localStorage for demo
+  getUsers() {
+    return JSON.parse(localStorage.getItem("vanta_demo_users") || "{}");
+  },
+  
+  saveUser(user) {
+    const users = this.getUsers();
+    users[user.uid] = user;
+    localStorage.setItem("vanta_demo_users", JSON.stringify(users));
+  },
+  
   signup(email, password, name) {
-    const user = { uid: "demo_" + Date.now(), email, displayName: name, demo: true };
+    const users = this.getUsers();
+    
+    // Check if email already exists
+    const existing = Object.values(users).find(u => u.email === email);
+    if (existing) {
+      throw new Error("auth/email-already-in-use");
+    }
+    
+    // Validate password
+    if (password.length < 6) {
+      throw new Error("auth/weak-password");
+    }
+    
+    // Create new user
+    const uid = "demo_" + Date.now();
+    const user = {
+      uid,
+      email,
+      displayName: name,
+      password, // In demo mode only - not secure for production
+      createdAt: new Date().toISOString(),
+      demo: true
+    };
+    
+    this.saveUser(user);
     localStorage.setItem("vanta_demo_user", JSON.stringify(user));
     window.VantaAuth._emit(user);
     return user;
   },
-  login(email) {
-    const user = { uid: "demo_" + Date.now(), email, displayName: email.split("@")[0], demo: true };
+  
+  login(email, password) {
+    const users = this.getUsers();
+    const user = Object.values(users).find(u => u.email === email);
+    
+    if (!user) {
+      throw new Error("auth/user-not-found");
+    }
+    
+    // For demo, if password is provided, check it. If not, allow login (for testing)
+    if (password && user.password !== password) {
+      throw new Error("auth/wrong-password");
+    }
+    
     localStorage.setItem("vanta_demo_user", JSON.stringify(user));
     window.VantaAuth._emit(user);
     return user;
   },
+  
+  logout() {
+    localStorage.removeItem("vanta_demo_user");
+    window.VantaAuth._emit(null);
+  },
+  
+  getCurrentUser() {
+    const user = localStorage.getItem("vanta_demo_user");
+    return user ? JSON.parse(user) : null;
+  },
+  
   saveOrder(order) {
     const orders = JSON.parse(localStorage.getItem("vanta_demo_orders") || "[]");
     orders.unshift(order);
     localStorage.setItem("vanta_demo_orders", JSON.stringify(orders));
   },
+  
   getOrders() {
     return JSON.parse(localStorage.getItem("vanta_demo_orders") || "[]");
   }

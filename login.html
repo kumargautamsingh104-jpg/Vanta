@@ -187,7 +187,7 @@
 
       try {
         if (window.VantaDemo.enabled()) {
-          window.VantaDemo.login(email);
+          window.VantaDemo.login(email, password);
           window.VantaToast("Demo login successful", "success");
           setTimeout(afterAuth, 600);
           return;

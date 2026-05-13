@@ -243,6 +243,11 @@
   // Wait for auth state
   window.VantaAuth.onChange(user => {
     if (user === undefined) return;
+    // Redirect to login if not authenticated
+    if (!user) {
+      window.location.href = "login.html?redirect=account.html";
+      return;
+    }
     render();
   });
 </script>
