@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Order Placed · VANTA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  body{background:var(--blue-wash);overflow-x:hidden}
+  .success-wrap{max-width:720px;margin:0 auto;padding:40px 20px 80px;position:relative}
+  .success-hero{text-align:center;margin-bottom:32px;position:relative}
+  .success-check{width:90px;height:90px;border-radius:50%;background:var(--green);display:grid;place-items:center;margin:0 auto 24px;position:relative;animation:pop .6s cubic-bezier(0.34, 1.56, 0.64, 1)}
+  .success-check::after{content:"";width:36px;height:18px;border-left:5px solid #fff;border-bottom:5px solid #fff;transform:rotate(-45deg) translate(2px,-2px)}
+  @keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
+  .success-hero h1{font-size:clamp(32px,4vw,44px);line-height:1.05;letter-spacing:-0.03em;color:var(--blue-ink);font-weight:700;margin-bottom:10px}
+  .success-hero h1 em{font-family:'Instrument Serif';font-style:italic;font-weight:400;color:var(--blue)}
+  .success-hero p{font-size:16px;color:var(--ink-dim)}
+  .success-hero p strong{color:var(--blue-ink)}
+
+  .success-card{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:28px;margin-bottom:18px}
+  .success-card h2{font-size:17px;color:var(--blue-ink);font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+  .order-id-bar{display:flex;justify-content:space-between;align-items:center;padding:16px;background:var(--blue-wash);border-radius:12px;margin-bottom:22px}
+  .order-id-bar small{display:block;font-size:11px;color:var(--ink-dim);font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px}
+  .order-id-bar strong{font-size:18px;color:var(--blue-ink);font-weight:700;font-family:'JetBrains Mono',monospace}
+  .order-id-bar .amt{text-align:right}
+  .order-id-bar .amt strong{color:var(--blue)}
+
+  /* TRACKING STEPS */
+  .tracker{display:flex;align-items:center;margin:20px 0;position:relative}
+  .track-step{flex:1;text-align:center;position:relative}
+  .track-circle{width:32px;height:32px;border-radius:50%;background:var(--line);color:var(--ink-dim);display:grid;place-items:center;margin:0 auto 8px;font-weight:700;font-size:13px;position:relative;z-index:2;transition:all .3s}
+  .track-step.active .track-circle{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(30,79,214,0.3)}
+  .track-step.done .track-circle{background:var(--green);color:#fff}
+  .track-label{font-size:11px;font-weight:600;color:var(--ink-dim)}
+  .track-step.active .track-label,.track-step.done .track-label{color:var(--blue-ink)}
+  .track-line{position:absolute;top:16px;left:50%;right:-50%;height:2px;background:var(--line);z-index:1}
+  .track-step.done .track-line{background:var(--green)}
+  .track-step:last-child .track-line{display:none}
+
+  /* ITEMS */
+  .order-item{display:grid;grid-template-columns:60px 1fr auto;gap:14px;padding:14px 0;align-items:center}
+  .order-item + .order-item{border-top:1px dashed var(--line)}
+  .order-item-img{width:60px;height:72px;border-radius:8px;background-size:cover;background-position:center}
+  .order-item-info strong{font-size:14px;color:var(--blue-ink);font-weight:600;display:block;margin-bottom:2px}
+  .order-item-info small{font-size:12px;color:var(--ink-dim)}
+  .order-item-price{font-weight:700;color:var(--blue-ink);font-size:14px}
+
+  /* ADDRESS */
+  .address-box{background:var(--blue-wash);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.5;color:var(--ink)}
+  .address-box strong{display:block;margin-bottom:4px;color:var(--blue-ink)}
+
+  /* CTA */
+  .success-ctas{display:flex;gap:10px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+
+  /* Confetti */
+  .confetti{position:fixed;top:-10px;width:8px;height:14px;opacity:0;animation:fall 4s ease-out forwards;z-index:10;pointer-events:none}
+  @keyframes fall{
+    0%{opacity:1;transform:translateY(0) rotate(0)}
+    100%{opacity:0;transform:translateY(110vh) rotate(720deg)}
+  }
+
+  @media (max-width:640px){
+    .order-id-bar{flex-direction:column;gap:10px;text-align:left}
+    .order-id-bar .amt{text-align:left;width:100%}
+    .tracker{flex-wrap:wrap;gap:10px}
+    .track-step{min-width:60px}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar"><span>✦ Thank you for shopping with VANTA</span></div>
+
+<nav>
+  <a class="logo" href="index.html"><div class="logo-mark">V</div>VANTA</a>
+  <div class="nav-actions">
+    <a href="account.html" class="account-btn" data-auth-show="in">
+      <span class="account-avatar" data-auth-initial>U</span>
+      <span data-auth-name>User</span>
+    </a>
+    <a href="index.html" class="cart-btn">Continue Shopping →</a>
+  </div>
+</nav>
+
+<div class="success-wrap">
+  <div class="success-hero">
+    <div class="success-check"></div>
+    <h1>Order <em>confirmed</em>!</h1>
+    <p id="heroMsg">You'll receive a confirmation email shortly. Sit tight — Wave 04 is on its way.</p>
+  </div>
+
+  <div id="orderContent">
+    <!-- Rendered by JS -->
+  </div>
+
+  <div class="success-ctas">
+    <a class="btn btn-primary" href="index.html#shop">Continue Shopping <span class="arrow">→</span></a>
+    <a class="btn btn-ghost" href="account.html">View All Orders</a>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script type="module" src="firebase-init.js"></script>
+<script src="shared.js"></script>
+<script>
+  const order = JSON.parse(sessionStorage.getItem("vanta_last_order") || "null");
+
+  if (!order) {
+    document.getElementById("orderContent").innerHTML = `
+      <div class="success-card" style="text-align:center">
+        <p style="color:var(--ink-dim)">No recent order found.</p>
+        <a class="btn btn-primary" href="index.html" style="margin-top:16px">Go home →</a>
+      </div>`;
+  } else {
+    const isCOD = order.payment.method === "cod";
+    const etaDays = isCOD ? 4 : 3;
+    const eta = new Date(Date.now() + etaDays * 24 * 60 * 60 * 1000);
+    const etaStr = eta.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
+
+    document.getElementById("heroMsg").innerHTML = `
+      A confirmation has been sent to <strong>${order.userEmail}</strong>.
+      Estimated delivery: <strong>${etaStr}</strong>.
+    `;
+
+    document.getElementById("orderContent").innerHTML = `
+      <div class="success-card">
+        <div class="order-id-bar">
+          <div>
+            <small>Order ID</small>
+            <strong>${order.orderId}</strong>
+          </div>
+          <div class="amt">
+            <small>${isCOD ? "To Pay (COD)" : "Paid"}</small>
+            <strong>${window.formatINR(order.total)}</strong>
+          </div>
+        </div>
+
+        <h2>📦 Order Status</h2>
+        <div class="tracker">
+          <div class="track-step done"><div class="track-circle">✓</div><div class="track-label">Confirmed</div><div class="track-line"></div></div>
+          <div class="track-step active"><div class="track-circle">2</div><div class="track-label">Packed</div><div class="track-line"></div></div>
+          <div class="track-step"><div class="track-circle">3</div><div class="track-label">Shipped</div><div class="track-line"></div></div>
+          <div class="track-step"><div class="track-circle">4</div><div class="track-label">Delivered</div></div>
+        </div>
+        <p style="font-size:12px;color:var(--ink-dim);text-align:center;margin-top:8px">You'll get SMS + email updates at every step.</p>
+      </div>
+
+      <div class="success-card">
+        <h2>🛍️ Items (${order.items.length})</h2>
+        ${order.items.map(it => `
+          <div class="order-item">
+            <div class="order-item-img" style="background-image:url('${it.image}')"></div>
+            <div class="order-item-info">
+              <strong>${it.title}</strong>
+              <small>Size: ${it.size} · Qty: ${it.qty}</small>
+            </div>
+            <div class="order-item-price">${window.formatINR(it.price * it.qty)}</div>
+          </div>
+        `).join("")}
+      </div>
+
+      <div class="success-card">
+        <h2>📍 Shipping to</h2>
+        <div class="address-box">
+          <strong>${order.address.name} · ${order.address.phone}</strong>
+          ${order.address.line1}${order.address.line2 ? ", " + order.address.line2 : ""}<br>
+          ${order.address.city}, ${order.address.state} ${order.address.pincode}<br>
+          ${order.address.email}
+        </div>
+      </div>
+
+      <div class="success-card">
+        <h2>💳 Payment</h2>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:14px">
+          <span style="color:var(--ink-dim)">Method</span>
+          <strong>${
+            order.payment.method === "upi" ? "UPI" :
+            order.payment.method === "card" ? "Credit/Debit Card" :
+            "Cash on Delivery"
+          }</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:14px">
+          <span style="color:var(--ink-dim)">Status</span>
+          <strong style="color:${isCOD ? 'var(--gold)' : 'var(--green)'}">${isCOD ? "Pending · Pay on delivery" : "Paid ✓"}</strong>
+        </div>
+        ${order.payment.paymentId ? `
+          <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--ink-dim)">
+            <span>Payment ID</span>
+            <span style="font-family:'JetBrains Mono',monospace">${order.payment.paymentId}</span>
+          </div>` : ""}
+      </div>
+    `;
+
+    // Confetti
+    const colors = ["#1e4fd6", "#3b6fff", "#7fb3ff", "#ffd84a", "#22c55e"];
+    for (let i = 0; i < 50; i++) {
+      const c = document.createElement("div");
+      c.className = "confetti";
+      c.style.left = Math.random() * 100 + "vw";
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.animationDelay = Math.random() * 0.8 + "s";
+      c.style.animationDuration = (3 + Math.random() * 2) + "s";
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 6000);
+    }
+  }
+
+  window.VantaAuth.onChange(user => {
+    const el = document.querySelector("[data-auth-initial]");
+    if (el && user) el.textContent = (user.displayName || user.email || "U").charAt(0).toUpperCase();
+  });
+</script>
+
+</body>
+</html>

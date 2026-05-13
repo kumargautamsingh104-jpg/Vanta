@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Your Bag · VANTA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .cart-layout{display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start}
+  .cart-items{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:8px}
+  .cart-item{display:grid;grid-template-columns:100px 1fr auto;gap:16px;padding:16px;border-radius:10px;align-items:center;position:relative}
+  .cart-item + .cart-item{border-top:1px solid var(--line)}
+  .cart-item-img{width:100px;height:120px;border-radius:10px;background-size:cover;background-position:center;background-color:var(--blue-wash)}
+  .cart-item-info h3{font-size:15px;color:var(--blue-ink);font-weight:600;margin-bottom:4px}
+  .cart-item-info small{font-size:12px;color:var(--ink-dim);display:block;margin-bottom:8px;font-family:'JetBrains Mono',monospace;letter-spacing:0.02em}
+  .cart-item-price-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .cart-item-price{font-weight:700;font-size:16px;color:var(--blue-ink)}
+  .cart-item-old{font-size:12px;color:var(--ink-dim);text-decoration:line-through}
+  .cart-item-off{font-size:11px;color:var(--green);font-weight:700}
+  .qty-controls{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .qty-btn{width:32px;height:32px;display:grid;place-items:center;font-weight:700;color:var(--blue-ink);cursor:pointer;transition:background .2s}
+  .qty-btn:hover{background:var(--blue-wash)}
+  .qty-val{padding:0 12px;font-weight:600;font-size:13px;min-width:40px;text-align:center}
+  .cart-item-actions{text-align:right}
+  .cart-item-total{font-weight:700;font-size:17px;color:var(--blue-ink);margin-bottom:10px}
+  .remove-btn{font-size:12px;color:var(--red);font-weight:600;cursor:pointer}
+  .remove-btn:hover{text-decoration:underline}
+
+  .cart-empty{text-align:center;padding:80px 20px;background:var(--blue-wash);border-radius:16px}
+  .cart-empty-icon{font-size:60px;margin-bottom:16px}
+  .cart-empty h2{font-size:24px;color:var(--blue-ink);margin-bottom:8px}
+  .cart-empty p{color:var(--ink-dim);margin-bottom:24px}
+
+  /* SUMMARY */
+  .cart-summary{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:24px;position:sticky;top:90px}
+  .cart-summary h3{font-size:18px;color:var(--blue-ink);margin-bottom:18px;font-weight:700}
+  .sum-row{display:flex;justify-content:space-between;padding:10px 0;font-size:14px;color:var(--ink)}
+  .sum-row.total{font-size:18px;font-weight:700;color:var(--blue-ink);border-top:1px dashed var(--line);padding-top:16px;margin-top:8px}
+  .sum-row .muted{color:var(--ink-dim)}
+  .sum-row .saved{color:var(--green);font-weight:700}
+  .coupon{display:flex;gap:8px;margin:16px 0}
+  .coupon input{flex:1;padding:10px 14px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;outline:none;text-transform:uppercase;letter-spacing:0.05em}
+  .coupon input:focus{border-color:var(--blue)}
+  .coupon button{padding:10px 16px;background:var(--blue-wash);color:var(--blue);font-weight:700;font-size:12px;border-radius:8px;transition:all .2s}
+  .coupon button:hover{background:var(--blue);color:#fff}
+  .coupon-msg{font-size:12px;margin:-8px 0 12px;font-weight:600}
+  .coupon-msg.success{color:var(--green)}
+  .coupon-msg.error{color:var(--red)}
+
+  .checkout-btn{width:100%;padding:14px;background:var(--blue);color:#fff;border-radius:10px;font-weight:700;font-size:15px;margin-top:20px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+  .checkout-btn:hover:not(:disabled){background:var(--blue-bright);transform:translateY(-1px);box-shadow:0 10px 30px rgba(30,79,214,0.3)}
+  .checkout-btn:disabled{opacity:0.5;cursor:not-allowed}
+
+  .secure-note{display:flex;align-items:center;gap:8px;margin-top:16px;font-size:12px;color:var(--ink-dim);justify-content:center}
+
+  .trust-mini{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}
+  .trust-mini-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-dim)}
+  .trust-mini-icon{width:28px;height:28px;border-radius:50%;background:var(--blue-wash);display:grid;place-items:center;font-size:13px}
+
+  @media (max-width:900px){
+    .cart-layout{grid-template-columns:1fr}
+    .cart-summary{position:static}
+    .cart-item{grid-template-columns:80px 1fr;gap:12px}
+    .cart-item-img{width:80px;height:100px}
+    .cart-item-actions{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px dashed var(--line)}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar"><span>✦ Free shipping above <strong>₹999</strong></span><span class="sep">|</span><span>Use code <strong>FIRST10</strong> for 10% off first order</span></div>
+
+<nav>
+  <a class="logo" href="index.html"><div class="logo-mark">V</div>VANTA</a>
+  <div class="nav-links">
+    <a href="index.html#cats">Shop</a>
+    <a href="index.html#shop">New Drop</a>
+    <a href="index.html#creators">Creators</a>
+    <a href="index.html#reviews">Reviews</a>
+  </div>
+  <div class="search-bar"><input type="text" placeholder="Search..." /></div>
+  <div class="nav-actions">
+    <a href="account.html" class="account-btn" data-auth-show="in">
+      <span class="account-avatar" data-auth-initial>U</span>
+      <span data-auth-name>User</span>
+    </a>
+    <a href="login.html" class="account-btn" data-auth-show="out"><span>Login</span></a>
+    <a href="cart.html" class="cart-btn">Bag <span class="cart-badge">0</span></a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="page-title">Your <em>bag</em></div>
+    <div class="page-sub" id="cartCount">0 items</div>
+  </div>
+
+  <div id="cartContent">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script type="module" src="firebase-init.js"></script>
+<script src="shared.js"></script>
+<script>
+  const COUPONS = {
+    "FIRST10": { type: "percent", value: 10, label: "10% off" },
+    "WAVE20":  { type: "percent", value: 20, label: "20% off" },
+    "FREESHIP":{ type: "shipping", value: 0, label: "Free shipping" }
+  };
+
+  let appliedCoupon = null;
+
+  function renderCart() {
+    const items = window.VantaCart.getAll();
+    const content = document.getElementById("cartContent");
+    document.getElementById("cartCount").textContent = `${window.VantaCart.count()} item${window.VantaCart.count() !== 1 ? "s" : ""}`;
+
+    if (items.length === 0) {
+      content.innerHTML = `
+        <div class="cart-empty">
+          <div class="cart-empty-icon">🛍️</div>
+          <h2>Your bag is empty</h2>
+          <p>Looks like you haven't added anything yet. Let's fix that.</p>
+          <a class="btn btn-primary" href="index.html#shop">Shop Wave 04 <span class="arrow">→</span></a>
+        </div>
+      `;
+      return;
+    }
+
+    const totals = window.VantaCart.totals();
+    const savedOnProducts = items.reduce((s, i) => s + ((i.oldPrice || i.price) - i.price) * i.qty, 0);
+    let discount = 0;
+    let freeShipping = false;
+    if (appliedCoupon) {
+      const c = COUPONS[appliedCoupon];
+      if (c.type === "percent") discount = Math.round(totals.subtotal * c.value / 100);
+      if (c.type === "shipping") freeShipping = true;
+    }
+    const finalShipping = freeShipping ? 0 : totals.shipping;
+    const finalTotal = totals.subtotal - discount + totals.gst + finalShipping;
+
+    content.innerHTML = `
+      <div class="cart-layout">
+        <div class="cart-items">
+          ${items.map(item => {
+            const lineTotal = item.price * item.qty;
+            const off = item.oldPrice ? Math.round((1 - item.price / item.oldPrice) * 100) : 0;
+            return `
+              <div class="cart-item">
+                <div class="cart-item-img" style="background-image:url('${item.image}')"></div>
+                <div class="cart-item-info">
+                  <h3>${item.title}</h3>
+                  <small>Size: ${item.size || "N/A"} · In Stock</small>
+                  <div class="cart-item-price-row">
+                    <span class="cart-item-price">${window.formatINR(item.price)}</span>
+                    ${item.oldPrice ? `<span class="cart-item-old">${window.formatINR(item.oldPrice)}</span><span class="cart-item-off">${off}% off</span>` : ""}
+                  </div>
+                  <div class="qty-controls">
+                    <button class="qty-btn" data-action="dec" data-id="${item.id}" data-size="${item.size}">−</button>
+                    <span class="qty-val">${item.qty}</span>
+                    <button class="qty-btn" data-action="inc" data-id="${item.id}" data-size="${item.size}">+</button>
+                  </div>
+                </div>
+                <div class="cart-item-actions">
+                  <div class="cart-item-total">${window.formatINR(lineTotal)}</div>
+                  <button class="remove-btn" data-action="remove" data-id="${item.id}" data-size="${item.size}">Remove</button>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+
+        <aside class="cart-summary">
+          <h3>Order Summary</h3>
+          <div class="sum-row"><span class="muted">Subtotal</span><span>${window.formatINR(totals.subtotal)}</span></div>
+          ${savedOnProducts > 0 ? `<div class="sum-row"><span class="muted">You saved (on MRP)</span><span class="saved">−${window.formatINR(savedOnProducts)}</span></div>` : ""}
+          ${discount > 0 ? `<div class="sum-row"><span class="muted">Coupon (${appliedCoupon})</span><span class="saved">−${window.formatINR(discount)}</span></div>` : ""}
+          <div class="sum-row"><span class="muted">GST (5%)</span><span>${window.formatINR(totals.gst)}</span></div>
+          <div class="sum-row"><span class="muted">Shipping</span><span>${finalShipping === 0 ? '<span class="saved">FREE</span>' : window.formatINR(finalShipping)}</span></div>
+
+          <div class="coupon">
+            <input type="text" id="couponInput" placeholder="Coupon code" ${appliedCoupon ? `value="${appliedCoupon}" disabled` : ""} />
+            <button id="couponBtn">${appliedCoupon ? "Remove" : "Apply"}</button>
+          </div>
+          <div id="couponMsg" class="coupon-msg"></div>
+
+          <div class="sum-row total"><span>Total</span><span>${window.formatINR(finalTotal)}</span></div>
+
+          <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout <span class="arrow">→</span></button>
+
+          <div class="secure-note">🔒 Secure checkout · Razorpay</div>
+
+          <div class="trust-mini">
+            <div class="trust-mini-item"><div class="trust-mini-icon">🚚</div>Free shipping ₹999+</div>
+            <div class="trust-mini-item"><div class="trust-mini-icon">↩️</div>7-day returns</div>
+            <div class="trust-mini-item"><div class="trust-mini-icon">💵</div>COD available</div>
+            <div class="trust-mini-item"><div class="trust-mini-icon">✦</div>100% authentic</div>
+          </div>
+        </aside>
+      </div>
+    `;
+
+    attachEvents();
+  }
+
+  function attachEvents() {
+    // Qty & remove
+    document.querySelectorAll("[data-action]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.id;
+        const size = btn.dataset.size;
+        const action = btn.dataset.action;
+        const items = window.VantaCart.getAll();
+        const item = items.find(i => i.id === id && (i.size || "na") === (size || "na"));
+        if (!item) return;
+        if (action === "inc") window.VantaCart.updateQty(id, size, item.qty + 1);
+        if (action === "dec") window.VantaCart.updateQty(id, size, item.qty - 1);
+        if (action === "remove") {
+          window.VantaCart.remove(id, size);
+          window.VantaToast("Removed from bag", "info");
+        }
+        renderCart();
+      });
+    });
+
+    // Coupon
+    const couponBtn = document.getElementById("couponBtn");
+    const couponInput = document.getElementById("couponInput");
+    const couponMsg = document.getElementById("couponMsg");
+    if (couponBtn) {
+      couponBtn.addEventListener("click", () => {
+        if (appliedCoupon) {
+          appliedCoupon = null;
+          window.VantaToast("Coupon removed");
+          renderCart();
+          return;
+        }
+        const code = couponInput.value.trim().toUpperCase();
+        if (COUPONS[code]) {
+          appliedCoupon = code;
+          couponMsg.className = "coupon-msg success";
+          couponMsg.textContent = `✓ Coupon applied: ${COUPONS[code].label}`;
+          window.VantaToast(`Coupon ${code} applied!`, "success");
+          setTimeout(renderCart, 500);
+        } else {
+          couponMsg.className = "coupon-msg error";
+          couponMsg.textContent = "Invalid coupon code";
+        }
+      });
+    }
+
+    // Checkout
+    const checkoutBtn = document.getElementById("checkoutBtn");
+    if (checkoutBtn) {
+      checkoutBtn.addEventListener("click", () => {
+        // persist coupon for checkout
+        if (appliedCoupon) sessionStorage.setItem("vanta_coupon", appliedCoupon);
+        else sessionStorage.removeItem("vanta_coupon");
+
+        // require login
+        if (!window.VantaAuth.currentUser) {
+          window.VantaToast("Please login to continue", "info");
+          setTimeout(() => location.href = "login.html?redirect=checkout.html", 800);
+          return;
+        }
+        location.href = "checkout.html";
+      });
+    }
+  }
+
+  // Initial render + re-render on cart change
+  renderCart();
+  window.addEventListener("vanta-cart-updated", renderCart);
+
+  // Update avatar initial
+  window.VantaAuth.onChange(user => {
+    const el = document.querySelector("[data-auth-initial]");
+    if (el && user) el.textContent = (user.displayName || user.email || "U").charAt(0).toUpperCase();
+  });
+</script>
+
+</body>
+</html>

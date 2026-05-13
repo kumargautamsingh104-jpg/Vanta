@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My Account · VANTA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .account-layout{display:grid;grid-template-columns:280px 1fr;gap:28px;align-items:start}
+
+  /* Sidebar */
+  .profile-card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:22px;text-align:center;position:sticky;top:90px}
+  .profile-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-ink));display:grid;place-items:center;color:#fff;font-weight:700;font-size:28px;margin:0 auto 14px}
+  .profile-card h3{font-size:17px;color:var(--blue-ink);margin-bottom:4px}
+  .profile-card p{font-size:13px;color:var(--ink-dim);margin-bottom:16px;word-break:break-word}
+  .profile-menu{display:flex;flex-direction:column;gap:4px;margin-top:16px;text-align:left;border-top:1px solid var(--line);padding-top:16px}
+  .profile-menu a{padding:10px 12px;border-radius:8px;font-size:14px;color:var(--ink);font-weight:500;transition:all .15s;display:flex;align-items:center;gap:10px;cursor:pointer}
+  .profile-menu a:hover{background:var(--blue-wash);color:var(--blue)}
+  .profile-menu a.active{background:var(--blue-wash);color:var(--blue);font-weight:600}
+  .profile-menu a.danger{color:var(--red)}
+  .profile-menu a.danger:hover{background:#ffebee}
+
+  /* Main */
+  .account-main{min-height:500px}
+  .account-section{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:28px;margin-bottom:18px}
+  .account-section h2{font-size:20px;color:var(--blue-ink);font-weight:700;margin-bottom:4px}
+  .account-section p.sub{color:var(--ink-dim);font-size:14px;margin-bottom:20px}
+
+  /* Stats */
+  .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+  .stat-card{background:var(--blue-wash);border-radius:12px;padding:18px;text-align:center}
+  .stat-card strong{display:block;font-size:28px;color:var(--blue-ink);font-weight:700;line-height:1;margin-bottom:4px}
+  .stat-card small{font-size:11px;color:var(--ink-dim);font-family:'JetBrains Mono',monospace;letter-spacing:0.08em;text-transform:uppercase}
+
+  /* Order list */
+  .order-card{border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px;transition:all .2s}
+  .order-card:hover{border-color:var(--sky);box-shadow:0 12px 30px -10px rgba(10,31,68,0.1)}
+  .order-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;margin-bottom:14px;border-bottom:1px dashed var(--line);flex-wrap:wrap;gap:10px}
+  .order-id{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;color:var(--blue-ink)}
+  .order-date{font-size:12px;color:var(--ink-dim);margin-top:2px}
+  .order-status{padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em}
+  .order-status.paid{background:#e6f7ed;color:var(--green)}
+  .order-status.confirmed{background:#fef3cc;color:#d98900}
+  .order-status.shipped{background:var(--blue-soft);color:var(--blue)}
+  .order-status.delivered{background:#e6f7ed;color:var(--green)}
+  .order-preview{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+  .order-thumb{width:56px;height:68px;border-radius:8px;background-size:cover;background-position:center;background-color:var(--blue-wash);flex-shrink:0}
+  .order-summary{flex:1;min-width:200px}
+  .order-summary strong{font-size:14px;color:var(--blue-ink);display:block}
+  .order-summary small{font-size:12px;color:var(--ink-dim)}
+  .order-footer{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--line);gap:12px;flex-wrap:wrap}
+  .order-total{font-size:16px;font-weight:700;color:var(--blue-ink)}
+  .order-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .order-action{padding:8px 14px;border:1px solid var(--line);border-radius:8px;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;transition:all .2s}
+  .order-action:hover{border-color:var(--blue);color:var(--blue)}
+  .order-action.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .order-action.primary:hover{background:var(--blue-bright)}
+
+  .empty-orders{text-align:center;padding:50px 20px;background:var(--blue-wash);border-radius:12px}
+  .empty-orders-icon{font-size:48px;margin-bottom:14px}
+  .empty-orders h3{font-size:18px;color:var(--blue-ink);margin-bottom:8px}
+  .empty-orders p{color:var(--ink-dim);margin-bottom:18px;font-size:14px}
+
+  .demo-banner{background:#fff7e6;border:1px solid #ffd84a;border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:#d98900;display:flex;gap:10px;align-items:flex-start}
+  .demo-banner strong{display:block;margin-bottom:2px;color:#a86500}
+
+  @media (max-width:900px){
+    .account-layout{grid-template-columns:1fr}
+    .profile-card{position:static}
+    .stats-grid{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar"><span>✦ Welcome back to <strong>VANTA</strong></span></div>
+
+<nav>
+  <a class="logo" href="index.html"><div class="logo-mark">V</div>VANTA</a>
+  <div class="nav-links">
+    <a href="index.html#cats">Shop</a>
+    <a href="index.html#shop">New Drop</a>
+    <a href="index.html#creators">Creators</a>
+    <a href="index.html#reviews">Reviews</a>
+  </div>
+  <div class="search-bar"><input type="text" placeholder="Search..." /></div>
+  <div class="nav-actions">
+    <a href="cart.html" class="cart-btn">Bag <span class="cart-badge">0</span></a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="page-title">My <em>Account</em></div>
+    <div class="page-sub">Manage your profile, orders, and preferences</div>
+  </div>
+
+  <div id="accountRoot">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script type="module" src="firebase-init.js"></script>
+<script src="shared.js"></script>
+<script>
+  async function loadOrders(user) {
+    if (!window.VANTA_READY || !window.VantaFB?.db) {
+      return window.VantaDemo.getOrders();
+    }
+    try {
+      const q = window.VantaFB.query(
+        window.VantaFB.collection(window.VantaFB.db, "orders"),
+        window.VantaFB.where("userId", "==", user.uid),
+        window.VantaFB.orderBy("createdAt", "desc")
+      );
+      const snap = await window.VantaFB.getDocs(q);
+      return snap.docs.map(d => d.data());
+    } catch (err) {
+      console.error("Failed to load orders:", err);
+      return [];
+    }
+  }
+
+  async function render() {
+    const user = window.VantaAuth.currentUser;
+    if (!user) {
+      location.href = "login.html?redirect=account.html";
+      return;
+    }
+
+    const name = user.displayName || user.email?.split("@")[0] || "User";
+    const initial = name.charAt(0).toUpperCase();
+    const orders = await loadOrders(user);
+    const totalSpent = orders.reduce((s, o) => s + (o.total || 0), 0);
+    const itemsBought = orders.reduce((s, o) => s + (o.items?.reduce((x, i) => x + (i.qty || 1), 0) || 0), 0);
+
+    document.getElementById("accountRoot").innerHTML = `
+      <div class="account-layout">
+        <aside class="profile-card">
+          <div class="profile-avatar">${initial}</div>
+          <h3>${name}</h3>
+          <p>${user.email || "No email"}</p>
+
+          ${window.VantaDemo.enabled() ? `
+            <div style="background:#fff7e6;color:#d98900;padding:8px 10px;border-radius:8px;font-size:11px;font-weight:600;margin-bottom:10px">
+              DEMO MODE
+            </div>` : ""}
+
+          <div class="profile-menu">
+            <a class="active">📦 Orders</a>
+            <a>👤 Profile</a>
+            <a>📍 Addresses</a>
+            <a>♡ Wishlist</a>
+            <a>🔔 Notifications</a>
+            <a class="danger" id="logoutBtn">→ Logout</a>
+          </div>
+        </aside>
+
+        <div class="account-main">
+          ${window.VantaDemo.enabled() ? `
+            <div class="demo-banner">
+              <span>⚠️</span>
+              <div>
+                <strong>Running in DEMO MODE</strong>
+                Firebase config isn't set yet — orders are saved locally in your browser only. Edit <code>config.js</code> to connect real backend.
+              </div>
+            </div>` : ""}
+
+          <div class="account-section">
+            <h2>Hey ${name.split(" ")[0]} 👋</h2>
+            <p class="sub">Here's a quick look at your VANTA journey.</p>
+            <div class="stats-grid">
+              <div class="stat-card"><strong>${orders.length}</strong><small>Total orders</small></div>
+              <div class="stat-card"><strong>${itemsBought}</strong><small>Items bought</small></div>
+              <div class="stat-card"><strong>${window.formatINR(totalSpent)}</strong><small>Lifetime value</small></div>
+            </div>
+          </div>
+
+          <div class="account-section">
+            <h2>Order History</h2>
+            <p class="sub">All your orders in one place.</p>
+            ${orders.length === 0 ? `
+              <div class="empty-orders">
+                <div class="empty-orders-icon">📦</div>
+                <h3>No orders yet</h3>
+                <p>When you place an order, it'll show up here.</p>
+                <a class="btn btn-primary" href="index.html#shop">Shop Wave 04 →</a>
+              </div>
+            ` : orders.map(o => {
+              const firstItem = o.items?.[0];
+              const createdAt = o.createdAt?.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
+              const dateStr = createdAt.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+              const statusClass = o.status === "paid" ? "paid" : o.status === "confirmed" ? "confirmed" : "paid";
+              const itemCount = o.items?.reduce((s, i) => s + i.qty, 0) || 0;
+              return `
+                <div class="order-card">
+                  <div class="order-header">
+                    <div>
+                      <div class="order-id">${o.orderId}</div>
+                      <div class="order-date">Placed on ${dateStr}</div>
+                    </div>
+                    <div class="order-status ${statusClass}">${o.status || "Confirmed"}</div>
+                  </div>
+                  <div class="order-preview">
+                    ${firstItem ? `<div class="order-thumb" style="background-image:url('${firstItem.image}')"></div>` : ""}
+                    <div class="order-summary">
+                      <strong>${firstItem?.title || "Order"}${o.items?.length > 1 ? ` + ${o.items.length - 1} more` : ""}</strong>
+                      <small>${itemCount} item${itemCount > 1 ? "s" : ""} · ${
+                        o.payment?.method === "upi" ? "UPI" :
+                        o.payment?.method === "card" ? "Card" :
+                        "Cash on Delivery"
+                      }</small>
+                    </div>
+                  </div>
+                  <div class="order-footer">
+                    <div class="order-total">${window.formatINR(o.total)}</div>
+                    <div class="order-actions">
+                      <button class="order-action">Track Order</button>
+                      <button class="order-action">Invoice</button>
+                      <button class="order-action primary">Buy Again</button>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await window.VantaAuth.logout();
+      window.VantaToast("Logged out", "info");
+      setTimeout(() => location.href = "index.html", 600);
+    });
+  }
+
+  // Wait for auth state
+  window.VantaAuth.onChange(user => {
+    if (user === undefined) return;
+    render();
+  });
+</script>
+
+</body>
+</html>

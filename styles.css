@@ -1,0 +1,106 @@
+/* styles.css — shared across all pages */
+:root{
+  --blue-ink:#0d1b3d;
+  --blue:#1e4fd6;
+  --blue-bright:#3b6fff;
+  --blue-warm:#2a5cdb;
+  --blue-soft:#e8eefc;
+  --blue-wash:#f4f7fe;
+  --sky:#7fb3ff;
+  --white:#ffffff;
+  --cream:#fafbfd;
+  --ink:#0a1230;
+  --ink-dim:#5b6680;
+  --line:#e4e9f4;
+  --yellow:#ffd84a;
+  --gold:#f5a623;
+  --star:#ffb400;
+  --red:#e63946;
+  --green:#22c55e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--ink);font-family:'Familjen Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{background:none;border:none;color:inherit;cursor:pointer;font:inherit}
+img{display:block;max-width:100%}
+
+/* TOP BAR */
+.topbar{background:var(--blue-ink);color:var(--white);font-family:'JetBrains Mono',monospace;font-size:12px;padding:9px 20px;text-align:center;letter-spacing:0.04em;display:flex;justify-content:center;align-items:center;gap:24px;flex-wrap:wrap}
+.topbar span{opacity:0.9}.topbar .sep{opacity:0.35}
+.topbar strong{color:var(--yellow);font-weight:500}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:22px;letter-spacing:-0.02em;color:var(--blue-ink)}
+.logo-mark{width:34px;height:34px;background:var(--blue);border-radius:8px;display:grid;place-items:center;color:var(--white);font-weight:700;transform:rotate(-4deg);font-size:18px;box-shadow:0 6px 20px rgba(30,79,214,0.35)}
+.nav-links{display:flex;gap:28px;font-size:14px;font-weight:500}
+.nav-links a{color:var(--ink);position:relative;padding:4px 0;transition:color .2s}
+.nav-links a:hover{color:var(--blue)}
+.nav-links a.active{color:var(--blue)}
+.search-bar{flex:1;max-width:420px;margin:0 24px;position:relative}
+.search-bar input{width:100%;padding:10px 14px 10px 40px;border:1px solid var(--line);border-radius:999px;background:var(--cream);font-family:inherit;font-size:13px;outline:none;transition:all .2s}
+.search-bar input:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 3px rgba(30,79,214,0.1)}
+.search-bar::before{content:"🔍";position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:13px;opacity:0.5}
+.nav-actions{display:flex;gap:10px;align-items:center}
+.icon-btn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);transition:all .2s;font-size:15px}
+.icon-btn:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-1px)}
+.cart-btn{background:var(--blue-ink);color:var(--white);padding:9px 16px;border-radius:999px;font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px;transition:all .2s;text-decoration:none}
+.cart-btn:hover{background:var(--blue);transform:translateY(-1px);box-shadow:0 8px 20px rgba(30,79,214,0.3)}
+.cart-badge{background:var(--yellow);color:var(--blue-ink);width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700}
+.account-btn{display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--blue-ink);transition:all .2s}
+.account-btn:hover{border-color:var(--blue);color:var(--blue)}
+.account-avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-ink));color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 24px;border-radius:999px;font-weight:600;font-size:14px;transition:all .25s ease;cursor:pointer;text-decoration:none}
+.btn-primary{background:var(--blue);color:var(--white);box-shadow:0 10px 30px rgba(30,79,214,0.35)}
+.btn-primary:hover{background:var(--blue-bright);transform:translateY(-2px);box-shadow:0 14px 36px rgba(30,79,214,0.45)}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-ghost{background:var(--white);color:var(--blue-ink);border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--blue-ink);transform:translateY(-2px)}
+.btn-dark{background:var(--blue-ink);color:var(--white)}
+.btn-dark:hover{background:var(--blue)}
+.btn-full{width:100%}
+.arrow{transition:transform .25s}.btn:hover .arrow{transform:translateX(4px)}
+
+/* SHARED PAGE LAYOUTS */
+.page-wrap{max-width:1200px;margin:0 auto;padding:40px 40px 80px}
+.page-header{margin-bottom:32px}
+.page-title{font-size:clamp(32px,4vw,48px);line-height:1;letter-spacing:-0.03em;color:var(--blue-ink);font-weight:700;margin-bottom:10px}
+.page-title em{font-family:'Instrument Serif';font-style:italic;font-weight:400;color:var(--blue)}
+.page-sub{color:var(--ink-dim);font-size:16px}
+
+/* FORMS */
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--blue-ink);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:12px 16px;border:1px solid var(--line);border-radius:10px;
+  font-family:inherit;font-size:14px;outline:none;transition:all .2s;background:var(--white);
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,79,214,0.1);
+}
+.form-error{color:var(--red);font-size:12px;margin-top:6px;display:none}
+.form-error.visible{display:block}
+
+/* TOAST, ALERTS */
+.alert{padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:16px}
+.alert-info{background:var(--blue-soft);color:var(--blue);border:1px solid rgba(30,79,214,0.2)}
+.alert-warn{background:#fff7e6;color:#d98900;border:1px solid #ffd84a}
+.alert-error{background:#ffebee;color:var(--red);border:1px solid var(--red)}
+
+/* RESPONSIVE */
+@media (max-width:1100px){
+  .search-bar{display:none}
+}
+@media (max-width:768px){
+  .topbar{font-size:10px;gap:10px;padding:7px 14px}
+  nav{padding:12px 16px}
+  .nav-links{display:none}
+  .logo{font-size:18px}
+  .logo-mark{width:30px;height:30px;font-size:16px}
+  .cart-btn{padding:8px 12px;font-size:12px}
+  .page-wrap{padding:24px 20px 80px}
+  .account-btn span{display:none}
+}

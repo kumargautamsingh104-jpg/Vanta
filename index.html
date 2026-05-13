@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VANTA — Premium Streetwear, Made for India</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* Landing-page specific styles */
+  .hero{position:relative;min-height:620px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+  .hero-left{padding:70px 60px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(180deg,var(--cream) 0%,var(--white) 100%);position:relative}
+  .hero-left::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0.5;background-image:linear-gradient(rgba(30,79,214,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(30,79,214,0.04) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse at left,black 20%,transparent 70%)}
+  .hero-content{position:relative;z-index:2;max-width:540px}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:var(--blue-soft);color:var(--blue);padding:7px 13px;border-radius:999px;font-weight:600;font-size:12px;margin-bottom:22px;border:1px solid rgba(30,79,214,0.15)}
+  .badge .pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,0.5)}50%{box-shadow:0 0 0 8px rgba(230,57,70,0)}}
+  h1.hero-title{font-size:clamp(42px,5.5vw,72px);line-height:1.02;letter-spacing:-0.035em;color:var(--blue-ink);font-weight:700;margin-bottom:22px}
+  h1.hero-title em{font-family:'Instrument Serif';font-style:italic;font-weight:400;color:var(--blue);position:relative;white-space:nowrap}
+  h1.hero-title em::after{content:"";position:absolute;bottom:0.05em;left:-0.05em;right:-0.05em;height:0.15em;background:var(--yellow);z-index:-1;border-radius:4px;transform:skew(-8deg)}
+  .hero-sub{font-size:17px;line-height:1.5;color:var(--ink-dim);margin-bottom:28px;max-width:500px}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px}
+  .trust-row{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+  .avatars{display:flex}
+  .avatars .av{width:36px;height:36px;border-radius:50%;border:2px solid var(--white);margin-left:-10px;background-size:cover;background-position:center}
+  .avatars .av:first-child{margin-left:0}
+  .trust-text strong{display:block;color:var(--blue-ink);font-weight:700;font-size:14px}
+  .trust-text small{color:var(--ink-dim);font-size:12px}
+  .stars{color:var(--star);letter-spacing:2px;font-size:13px}
+  .hero-right{position:relative;overflow:hidden;background:var(--blue-ink)}
+  .hero-photo{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1200&q=80');background-size:cover;background-position:center;filter:saturate(1.1)}
+  .hero-photo-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(13,27,61,0.15) 0%,rgba(30,79,214,0.2) 100%)}
+  .hero-product-card{position:absolute;bottom:30px;right:30px;background:rgba(255,255,255,0.98);backdrop-filter:blur(10px);padding:16px 18px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.25);display:flex;align-items:center;gap:12px;max-width:280px}
+  .hero-product-thumb{width:60px;height:60px;border-radius:10px;background-image:url('https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&q=80');background-size:cover;background-position:center;flex-shrink:0}
+  .hero-product-info{flex:1;min-width:0}
+  .hero-product-info strong{display:block;font-size:13px;color:var(--blue-ink);margin-bottom:2px;font-weight:600}
+  .hero-product-info small{display:block;font-size:11px;color:var(--ink-dim);margin-bottom:4px}
+  .hero-product-price{font-weight:700;font-size:15px;color:var(--blue-ink);display:flex;align-items:center;gap:6px}
+  .hero-product-price .old{color:var(--ink-dim);text-decoration:line-through;font-weight:500;font-size:12px}
+  .hero-product-price .off{background:var(--green);color:var(--white);font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700}
+  .hero-floater{position:absolute;top:30px;left:30px;background:rgba(255,255,255,0.98);padding:10px 14px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,0.2);font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px}
+  .hero-floater .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+
+  .trust-strip{background:var(--white);border-bottom:1px solid var(--line);border-top:1px solid var(--line);padding:18px 40px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1400px;margin:0 auto}
+  .trust-item{display:flex;align-items:center;gap:12px;justify-content:center}
+  .trust-icon{width:42px;height:42px;border-radius:10px;background:var(--blue-soft);display:grid;place-items:center;font-size:20px;flex-shrink:0}
+  .trust-info strong{display:block;font-size:13px;color:var(--blue-ink);font-weight:700}
+  .trust-info small{display:block;font-size:11px;color:var(--ink-dim)}
+
+  .press-strip{padding:24px 40px;background:var(--blue-wash);display:flex;align-items:center;justify-content:center;gap:44px;flex-wrap:wrap;font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink-dim);font-style:italic}
+  .press-strip .lbl{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.15em;font-style:normal;color:var(--blue)}
+  .press-strip span{opacity:0.7;font-weight:500}
+
+  .section{padding:90px 40px}
+  .section-head{text-align:center;max-width:780px;margin:0 auto 48px}
+  .eyebrow{display:inline-block;color:var(--blue);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:12px;font-family:'JetBrains Mono',monospace}
+  .section-head h2{font-size:clamp(34px,4.5vw,54px);line-height:1;letter-spacing:-0.03em;color:var(--blue-ink);font-weight:700;margin-bottom:16px}
+  .section-head h2 em{font-family:'Instrument Serif';font-style:italic;font-weight:400;color:var(--blue)}
+  .section-head p{color:var(--ink-dim);font-size:16px;line-height:1.5}
+
+  .cat-tiles{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;max-width:1400px;margin:0 auto}
+  .cat-tile{aspect-ratio:3/4;border-radius:18px;overflow:hidden;position:relative;cursor:pointer;transition:transform .3s;background-size:cover;background-position:center}
+  .cat-tile:hover{transform:translateY(-6px)}
+  .cat-tile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(13,27,61,0.85) 100%)}
+  .cat-tile-info{position:absolute;bottom:0;left:0;right:0;padding:16px;color:var(--white);z-index:2}
+  .cat-tile-info strong{display:block;font-size:16px;font-weight:700;margin-bottom:2px}
+  .cat-tile-info small{display:block;font-size:11px;opacity:0.85;font-family:'JetBrains Mono',monospace;letter-spacing:0.05em}
+  .cat-tile-arrow{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.95);display:grid;place-items:center;color:var(--blue-ink);z-index:2;transition:transform .3s;font-size:14px}
+  .cat-tile:hover .cat-tile-arrow{transform:translate(4px,-4px)}
+
+  .cat-tabs{display:flex;gap:8px;justify-content:center;margin-bottom:36px;flex-wrap:wrap;padding:6px;background:var(--blue-wash);border-radius:999px;max-width:fit-content;margin-left:auto;margin-right:auto;border:1px solid var(--line)}
+  .cat-tab{padding:9px 18px;border-radius:999px;font-weight:600;font-size:13px;color:var(--ink-dim);transition:all .2s;display:flex;align-items:center;gap:8px}
+  .cat-tab:hover{color:var(--blue-ink)}
+  .cat-tab.active{background:var(--white);color:var(--blue-ink);box-shadow:0 4px 12px rgba(10,31,68,0.08)}
+  .cat-tab .count{background:var(--blue-soft);color:var(--blue);padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700}
+  .cat-tab.active .count{background:var(--blue);color:var(--white)}
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1400px;margin:0 auto}
+  .product{background:var(--white);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:all .3s ease;position:relative}
+  .product:hover{transform:translateY(-6px);box-shadow:0 24px 60px -20px rgba(10,31,68,0.2);border-color:var(--sky)}
+  .product-media{aspect-ratio:4/5;position:relative;overflow:hidden;background:var(--blue-wash)}
+  .product-media img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+  .product:hover .product-media img{transform:scale(1.05)}
+  .tag{position:absolute;top:12px;left:12px;z-index:2;background:var(--blue);color:var(--white);padding:5px 10px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase}
+  .tag.yellow{background:var(--yellow);color:var(--blue-ink)}
+  .tag.red{background:var(--red);color:var(--white)}
+  .wishlist{position:absolute;top:12px;right:12px;z-index:2;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.95);display:grid;place-items:center;box-shadow:0 4px 12px rgba(10,31,68,0.1);transition:all .2s;font-size:14px}
+  .wishlist:hover{color:var(--red);transform:scale(1.1)}
+  .product-body{padding:14px 14px 16px}
+  .product-title{font-weight:600;font-size:14px;color:var(--blue-ink);margin-bottom:4px;line-height:1.3}
+  .product-rating{font-size:11px;color:var(--ink-dim);display:flex;align-items:center;gap:5px;margin-bottom:8px}
+  .rating-badge{background:var(--green);color:var(--white);padding:2px 6px;border-radius:4px;font-weight:700;font-size:11px}
+  .product-price-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+  .product-price{font-weight:700;font-size:17px;color:var(--blue-ink)}
+  .price-old{color:var(--ink-dim);text-decoration:line-through;font-weight:500;font-size:13px}
+  .price-off{color:var(--green);font-weight:700;font-size:12px}
+  .sizes{display:flex;gap:5px;margin-bottom:10px}
+  .size{flex:1;padding:6px 0;text-align:center;border:1px solid var(--line);border-radius:6px;font-size:11px;font-weight:600;color:var(--ink);transition:all .15s;cursor:pointer}
+  .size:hover{border-color:var(--blue);color:var(--blue)}
+  .size.selected{background:var(--blue-ink);color:var(--white);border-color:var(--blue-ink)}
+  .size.disabled{color:var(--line);cursor:not-allowed;text-decoration:line-through}
+  .add-btn{width:100%;padding:10px;border-radius:8px;background:var(--blue-ink);color:var(--white);font-weight:600;font-size:12px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+  .add-btn:hover{background:var(--blue)}
+  .add-btn.added{background:var(--green)}
+  .view-all-wrap{text-align:center;margin-top:40px}
+
+  .testimonials{background:var(--blue-wash);padding:90px 40px;position:relative;overflow:hidden}
+  .t-grid{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1300px;margin:0 auto}
+  .t-card{background:var(--white);border-radius:18px;padding:24px;border:1px solid var(--line);display:flex;flex-direction:column;gap:14px}
+  .t-card.featured{background:var(--blue-ink);color:var(--white);border-color:var(--blue-ink)}
+  .t-card.featured .t-head small,.t-card.featured .t-text{color:rgba(255,255,255,0.85)}
+  .t-card.featured .verified{background:rgba(255,255,255,0.15);color:var(--white)}
+  .t-card.featured .t-bought{border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.75)}
+  .t-head{display:flex;align-items:center;gap:12px}
+  .t-avatar{width:46px;height:46px;border-radius:50%;background-size:cover;background-position:center;border:2px solid var(--white);flex-shrink:0}
+  .t-head strong{display:block;font-size:14px;font-weight:600}
+  .t-head small{font-size:12px;color:var(--ink-dim)}
+  .verified{margin-left:auto;background:var(--blue-soft);color:var(--blue);padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600}
+  .t-stars{color:var(--star);letter-spacing:2px;font-size:13px}
+  .t-text{font-size:14px;line-height:1.55}
+  .t-text strong{color:var(--blue);font-weight:600}
+  .t-card.featured .t-text strong{color:var(--yellow)}
+  .t-bought{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px dashed var(--line);font-size:12px;color:var(--ink-dim)}
+  .t-bought-thumb{width:32px;height:32px;border-radius:6px;background-size:cover;background-position:center;flex-shrink:0}
+
+  .ugc{padding:90px 40px;background:var(--white)}
+  .ugc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;max-width:1400px;margin:0 auto}
+  .ugc-tile{aspect-ratio:1/1;border-radius:10px;overflow:hidden;position:relative;cursor:pointer;background-size:cover;background-position:center;transition:transform .3s}
+  .ugc-tile:hover{transform:scale(1.03);z-index:2}
+  .ugc-tile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,0.6) 100%);opacity:0;transition:opacity .2s}
+  .ugc-tile:hover::after{opacity:1}
+  .ugc-tile-handle{position:absolute;bottom:8px;left:10px;color:var(--white);font-size:11px;font-weight:600;z-index:2;opacity:0;transition:opacity .2s;font-family:'JetBrains Mono',monospace}
+  .ugc-tile:hover .ugc-tile-handle{opacity:1}
+  .ugc-tile.featured{grid-column:span 2;grid-row:span 2}
+  .ugc-cta{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--blue-ink);color:var(--white);padding:20px;text-align:center;border-radius:10px}
+  .ugc-cta strong{font-family:'Instrument Serif';font-style:italic;font-size:clamp(16px,1.5vw,22px);line-height:1.1;margin-bottom:8px;font-weight:400}
+  .ugc-cta small{font-family:'JetBrains Mono',monospace;font-size:10px;opacity:0.7;letter-spacing:0.1em;text-transform:uppercase}
+  .ugc-cta .tag-ig{background:var(--yellow);color:var(--blue-ink);padding:4px 10px;border-radius:999px;margin-top:10px;font-size:11px;font-weight:700}
+
+  .creators{padding:90px 40px;background:var(--cream)}
+  .creator-scroll{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;max-width:1400px;margin:0 auto}
+  .reel{aspect-ratio:9/16;border-radius:16px;overflow:hidden;position:relative;cursor:pointer;transition:transform .3s;background-size:cover;background-position:center;text-decoration:none}
+  .reel:hover{transform:translateY(-6px) scale(1.02)}
+  .reel::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,0.75) 100%)}
+  .reel-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.95);display:grid;place-items:center;transition:all .3s;z-index:2}
+  .reel:hover .reel-play{transform:translate(-50%,-50%) scale(1.15);box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+  .reel-play::after{content:"";border-left:13px solid var(--blue-ink);border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:3px;position:static}
+  .reel-info{position:absolute;bottom:0;left:0;right:0;padding:12px;color:var(--white);z-index:2}
+  .reel-handle{font-weight:600;font-size:12px;display:flex;align-items:center;gap:6px;margin-bottom:3px}
+  .reel-handle .vtick{color:var(--sky)}
+  .reel-stats{font-size:10px;opacity:0.9;display:flex;gap:10px}
+  .reel-platform{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:7px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);display:grid;place-items:center;color:var(--white);font-size:11px;font-weight:700;z-index:2}
+
+  .blog{padding:90px 40px;background:var(--white)}
+  .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1300px;margin:0 auto}
+  .post{background:var(--white);border-radius:18px;overflow:hidden;border:1px solid var(--line);transition:all .3s;display:flex;flex-direction:column}
+  .post:hover{transform:translateY(-4px);box-shadow:0 24px 50px -20px rgba(10,31,68,0.15);border-color:var(--sky)}
+  .post-cover{aspect-ratio:16/10;position:relative;overflow:hidden;background-size:cover;background-position:center}
+  .post-cat{position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.95);color:var(--blue-ink);padding:5px 11px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;z-index:2}
+  .post-body{padding:20px;flex:1;display:flex;flex-direction:column}
+  .post-meta{font-size:11px;color:var(--ink-dim);margin-bottom:8px;display:flex;gap:10px;align-items:center}
+  .post-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--ink-dim)}
+  .post h3{font-size:18px;line-height:1.3;color:var(--blue-ink);margin-bottom:8px;font-weight:600}
+  .post p{color:var(--ink-dim);font-size:13px;line-height:1.5;margin-bottom:14px;flex:1}
+  .read-more{color:var(--blue);font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:6px;transition:gap .2s}
+  .read-more:hover{gap:10px}
+
+  .cta-banner{position:relative;margin:0 40px;padding:70px 54px;background:var(--blue-ink);border-radius:28px;color:var(--white);display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:center;overflow:hidden}
+  .cta-banner::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0.35;background:radial-gradient(500px 300px at 100% 0%,var(--sky),transparent 60%),radial-gradient(400px 300px at 0% 100%,var(--blue),transparent 60%)}
+  .cta-banner-content{position:relative;z-index:1}
+  .cta-banner h2{font-size:clamp(32px,3.8vw,46px);line-height:1;margin-bottom:14px;font-weight:700}
+  .cta-banner h2 em{font-family:'Instrument Serif';font-style:italic;font-weight:400;color:var(--yellow)}
+  .cta-banner p{font-size:16px;opacity:0.85;margin-bottom:22px;max-width:520px}
+  .news-form{display:flex;background:var(--white);padding:5px;border-radius:999px;max-width:460px}
+  .news-form input{flex:1;background:transparent;border:none;outline:none;padding:11px 18px;font-size:13px;color:var(--ink)}
+  .news-form button{background:var(--blue);color:var(--white);padding:11px 20px;border-radius:999px;font-weight:600;font-size:13px}
+  .cta-banner-visual{position:relative;z-index:1;height:260px;border-radius:16px;overflow:hidden;background-image:url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80');background-size:cover;background-position:center}
+
+  footer{padding:60px 40px 24px;background:var(--white);border-top:1px solid var(--line);margin-top:70px}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:36px;max-width:1400px;margin:0 auto 32px}
+  .foot-brand p{color:var(--ink-dim);font-size:13px;line-height:1.5;margin:14px 0;max-width:320px}
+  .foot-social{display:flex;gap:8px}
+  .soc{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink);transition:all .2s;font-size:12px;font-weight:600}
+  .soc:hover{background:var(--blue);color:var(--white);border-color:var(--blue);transform:translateY(-2px)}
+  footer h4{font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:var(--blue-ink);margin-bottom:14px;font-weight:700}
+  footer ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+  footer a{font-size:13px;color:var(--ink-dim);transition:color .2s}
+  footer a:hover{color:var(--blue)}
+  .foot-bottom{max-width:1400px;margin:0 auto;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--ink-dim)}
+  .foot-pay{display:flex;gap:8px;flex-wrap:wrap}
+  .pay{padding:4px 9px;background:var(--blue-wash);border-radius:5px;font-size:10px;font-weight:700;color:var(--blue-ink)}
+
+  .mobile-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:99;background:var(--white);border-top:1px solid var(--line);padding:12px 16px}
+  .mobile-cta-inner{display:flex;gap:10px;align-items:center}
+  .mobile-cta-price small{display:block;font-size:10px;color:var(--ink-dim);font-family:'JetBrains Mono',monospace}
+  .mobile-cta-price strong{display:block;font-size:17px;color:var(--blue-ink);font-weight:700}
+  .mobile-cta-btn{flex:1;background:var(--blue);color:var(--white);padding:13px;border-radius:10px;font-weight:700;font-size:14px;text-align:center;text-decoration:none}
+
+  @media (max-width:1100px){
+    .grid,.t-grid,.blog-grid{grid-template-columns:repeat(2,1fr)}
+    .cat-tiles,.creator-scroll,.ugc-grid{grid-template-columns:repeat(3,1fr)}
+    .foot-grid{grid-template-columns:1fr 1fr 1fr;gap:26px}
+    .foot-brand{grid-column:1/-1}
+  }
+  @media (max-width:768px){
+    .hero{grid-template-columns:1fr;min-height:auto}
+    .hero-left{padding:40px 20px 30px;order:2}
+    .hero-right{order:1;height:360px;position:relative}
+    .hero-product-card{bottom:14px;right:14px;padding:10px 12px}
+    .hero-product-thumb{width:44px;height:44px}
+    .hero-floater{top:14px;left:14px;font-size:10px;padding:7px 10px}
+    .trust-strip{grid-template-columns:repeat(2,1fr);padding:16px 20px;gap:14px}
+    .section{padding:60px 20px}
+    .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+    .cat-tiles{grid-template-columns:repeat(2,1fr);gap:12px}
+    .t-grid,.blog-grid{grid-template-columns:1fr}
+    .ugc-grid{grid-template-columns:repeat(3,1fr)}
+    .creator-scroll{grid-template-columns:repeat(2,1fr)}
+    .cta-banner{grid-template-columns:1fr;margin:0 20px;padding:40px 24px}
+    .cta-banner-visual{display:none}
+    .foot-grid{grid-template-columns:1fr 1fr;gap:24px}
+    footer{padding-bottom:90px}
+    .mobile-cta{display:block}
+  }
+
+  .reveal{opacity:0;transform:translateY(20px);animation:rev .8s forwards}
+  .reveal.d1{animation-delay:.08s}.reveal.d2{animation-delay:.18s}
+  .reveal.d3{animation-delay:.28s}.reveal.d4{animation-delay:.38s}
+  @keyframes rev{to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span>✦ Free shipping across India on orders above <strong>₹999</strong></span>
+  <span class="sep">|</span>
+  <span>New Drop: <strong>WAVE 04</strong></span>
+  <span class="sep">|</span>
+  <span>Code <strong>FIRST10</strong> — 10% off first order</span>
+</div>
+
+<nav>
+  <a class="logo" href="index.html"><div class="logo-mark">V</div>VANTA</a>
+  <div class="nav-links">
+    <a href="#cats" class="active">Shop</a>
+    <a href="#shop">New Drop</a>
+    <a href="#creators">Creators</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#blog">Journal</a>
+  </div>
+  <div class="search-bar"><input type="text" placeholder="Search for tees, hoodies, caps..." /></div>
+  <div class="nav-actions">
+    <a href="account.html" class="account-btn" data-auth-show="in">
+      <span class="account-avatar" data-auth-initial>U</span>
+      <span data-auth-name>User</span>
+    </a>
+    <a href="login.html" class="account-btn" data-auth-show="out">
+      <span>Login</span>
+    </a>
+    <a href="cart.html" class="cart-btn">Bag <span class="cart-badge">0</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-content">
+      <div class="badge reveal d1"><span class="pulse"></span> Wave 04 — Live Now</div>
+      <h1 class="hero-title reveal d1">Premium streetwear,<br/>made for <em>India</em>.</h1>
+      <p class="hero-sub reveal d2">Heavyweight cotton. Ocean-deep blues. Small batches, built to outlast trends. Designed in Mumbai, shipped free across India in 3 days.</p>
+      <div class="cta-row reveal d3">
+        <a class="btn btn-primary" href="#shop">Shop Wave 04 <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href="#creators">Watch Creator Reels</a>
+      </div>
+      <div class="trust-row reveal d4">
+        <div class="avatars">
+          <div class="av" style="background-image:url('https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&q=80')"></div>
+          <div class="av" style="background-image:url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80')"></div>
+          <div class="av" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80')"></div>
+          <div class="av" style="background-image:url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80')"></div>
+        </div>
+        <div class="trust-text">
+          <div class="stars">★★★★★ <span style="color:var(--ink);font-weight:700">4.8/5</span></div>
+          <small>Loved by <strong>18,200+</strong> customers across India</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-photo"></div>
+    <div class="hero-photo-overlay"></div>
+    <div class="hero-floater"><span class="dot"></span> 47 orders placed in the last hour</div>
+    <div class="hero-product-card">
+      <div class="hero-product-thumb"></div>
+      <div class="hero-product-info">
+        <strong>Signature Wave Tee</strong>
+        <small>Heavyweight · 220gsm</small>
+        <div class="hero-product-price">
+          ₹1,799 <span class="old">₹2,499</span> <span class="off">28% OFF</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust-strip">
+  <div class="trust-item"><div class="trust-icon">🚚</div><div class="trust-info"><strong>Free Shipping</strong><small>On orders above ₹999</small></div></div>
+  <div class="trust-item"><div class="trust-icon">↩️</div><div class="trust-info"><strong>7-Day Returns</strong><small>Easy & hassle-free</small></div></div>
+  <div class="trust-item"><div class="trust-icon">💵</div><div class="trust-info"><strong>Cash on Delivery</strong><small>Available pan-India</small></div></div>
+  <div class="trust-item"><div class="trust-icon">✦</div><div class="trust-info"><strong>100% Authentic</strong><small>Direct from our studio</small></div></div>
+</div>
+
+<div class="press-strip">
+  <span class="lbl">Featured in</span>
+  <span>Vogue India</span><span>GQ India</span><span>Homegrown</span><span>Man's World</span><span>Lifestyle Asia</span>
+</div>
+
+<section class="section" id="cats">
+  <div class="section-head">
+    <div class="eyebrow">⎯⎯ Shop by Category ⎯⎯</div>
+    <h2>Find your <em>fit</em></h2>
+    <p>Browse the full range — every piece cut for the Indian body, Indian summer, Indian style.</p>
+  </div>
+  <div class="cat-tiles">
+    <a href="#shop" class="cat-tile" style="background-image:url('https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=600&q=80')"><div class="cat-tile-arrow">→</div><div class="cat-tile-info"><strong>T-Shirts</strong><small>6 styles · from ₹1,499</small></div></a>
+    <a href="#shop" class="cat-tile" style="background-image:url('https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80')"><div class="cat-tile-arrow">→</div><div class="cat-tile-info"><strong>Hoodies</strong><small>3 styles · from ₹2,999</small></div></a>
+    <a href="#shop" class="cat-tile" style="background-image:url('https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&q=80')"><div class="cat-tile-arrow">→</div><div class="cat-tile-info"><strong>Caps</strong><small>2 styles · from ₹999</small></div></a>
+    <a href="#shop" class="cat-tile" style="background-image:url('https://images.unsplash.com/photo-1606522754091-a3bbf9ad4cb3?w=600&q=80')"><div class="cat-tile-arrow">→</div><div class="cat-tile-info"><strong>Bags & Totes</strong><small>4 styles · from ₹799</small></div></a>
+    <a href="#shop" class="cat-tile" style="background-image:url('https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&q=80')"><div class="cat-tile-arrow">→</div><div class="cat-tile-info"><strong>Oversized Fit</strong><small>New · from ₹1,699</small></div></a>
+    <a href="#shop" class="cat-tile" style="background-image:url('https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600&q=80')"><div class="cat-tile-arrow">→</div><div class="cat-tile-info"><strong>Accessories</strong><small>Pins, patches, stickers</small></div></a>
+  </div>
+</section>
+
+<section class="section" id="shop" style="padding-top:0">
+  <div class="section-head">
+    <div class="eyebrow">⎯⎯ Wave 04 Collection ⎯⎯</div>
+    <h2>Shop the full <em>drop</em></h2>
+    <p>Twelve pieces, premium cotton, ships with a handwritten thank-you + sticker.</p>
+  </div>
+
+  <div class="cat-tabs">
+    <button class="cat-tab active" data-cat="all">All <span class="count">8</span></button>
+    <button class="cat-tab" data-cat="tees">T-Shirts <span class="count">4</span></button>
+    <button class="cat-tab" data-cat="hoodies">Hoodies <span class="count">2</span></button>
+    <button class="cat-tab" data-cat="caps">Caps <span class="count">1</span></button>
+    <button class="cat-tab" data-cat="accs">Accessories <span class="count">1</span></button>
+  </div>
+
+  <div class="grid" id="productGrid"></div>
+
+  <div class="view-all-wrap"><a class="btn btn-ghost" href="#">View all products <span class="arrow">→</span></a></div>
+</section>
+
+<section class="testimonials" id="reviews">
+  <div class="section-head">
+    <div class="eyebrow">⎯⎯ 4.8/5 from 3,400+ Reviews ⎯⎯</div>
+    <h2>What people are <em>saying</em></h2>
+    <p>Real reviews from real customers across India.</p>
+  </div>
+  <div class="t-grid">
+    <div class="t-card">
+      <div class="t-head">
+        <div class="t-avatar" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&q=80')"></div>
+        <div><strong>Arjun Mehta</strong><small>Mumbai, MH</small></div>
+        <div class="verified">✓ Verified</div>
+      </div>
+      <div class="t-stars">★★★★★</div>
+      <p class="t-text">Honestly the <strong>softest heavyweight tee</strong> I've owned. Blue is deeper than photos. Washed 10+ times, zero fade. Worth every rupee.</p>
+      <div class="t-bought"><div class="t-bought-thumb" style="background-image:url('https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&q=80')"></div><span>Signature Wave Tee · M</span></div>
+    </div>
+    <div class="t-card featured">
+      <div class="t-head">
+        <div class="t-avatar" style="background-image:url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&q=80')"></div>
+        <div><strong>Ananya Kapoor</strong><small>Bengaluru, KA</small></div>
+        <div class="verified">✓ Verified</div>
+      </div>
+      <div class="t-stars">★★★★★</div>
+      <p class="t-text">Ordered the hoodie for my brother and <strong>stole it within a week</strong>. Fit is perfect. Packaging felt like a gift. Already ordered 3 more for Diwali.</p>
+      <div class="t-bought"><div class="t-bought-thumb" style="background-image:url('https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=100&q=80')"></div><span>Deep Blue Hoodie · L</span></div>
+    </div>
+    <div class="t-card">
+      <div class="t-head">
+        <div class="t-avatar" style="background-image:url('https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&q=80')"></div>
+        <div><strong>Karan Reddy</strong><small>Hyderabad, TS</small></div>
+        <div class="verified">✓ Verified</div>
+      </div>
+      <div class="t-stars">★★★★★</div>
+      <p class="t-text">The <strong>fit guide was spot-on</strong>. I'm 6'1" and L was exactly what I needed. Shipping was stupid fast — ordered Monday, wearing it Thursday.</p>
+      <div class="t-bought"><div class="t-bought-thumb" style="background-image:url('https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=100&q=80')"></div><span>Heritage Logo Tee · L</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="ugc">
+  <div class="section-head">
+    <div class="eyebrow">⎯⎯ #WearTheWave ⎯⎯</div>
+    <h2>As worn by <em>you</em></h2>
+    <p>Tag <strong style="color:var(--blue)">@vanta.in</strong> for a chance to be featured + 15% off your next order.</p>
+  </div>
+  <div class="ugc-grid">
+    <div class="ugc-tile featured" style="background-image:url('https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&q=80')"><div class="ugc-tile-handle">@nehain_mumbai</div></div>
+    <div class="ugc-tile" style="background-image:url('https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80')"><div class="ugc-tile-handle">@aarav.style</div></div>
+    <div class="ugc-tile" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80')"><div class="ugc-tile-handle">@karan_k</div></div>
+    <div class="ugc-tile" style="background-image:url('https://images.unsplash.com/photo-1489980557514-251d61e3eeb6?w=400&q=80')"><div class="ugc-tile-handle">@sanya.looks</div></div>
+    <div class="ugc-cta"><strong>Share your fit</strong><small>Get featured</small><div class="tag-ig">#WearTheWave</div></div>
+    <div class="ugc-tile" style="background-image:url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80')"><div class="ugc-tile-handle">@meera_i</div></div>
+    <div class="ugc-tile" style="background-image:url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80')"><div class="ugc-tile-handle">@rohank.delhi</div></div>
+    <div class="ugc-tile" style="background-image:url('https://images.unsplash.com/photo-1521119989659-a83eee488004?w=400&q=80')"><div class="ugc-tile-handle">@ishan.fits</div></div>
+    <div class="ugc-tile" style="background-image:url('https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80')"><div class="ugc-tile-handle">@priya_p</div></div>
+    <div class="ugc-tile" style="background-image:url('https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&q=80')"><div class="ugc-tile-handle">@vikram.s</div></div>
+  </div>
+</section>
+
+<!-- CREATORS — real external links to Instagram/TikTok -->
+<section class="creators" id="creators">
+  <div class="section-head">
+    <div class="eyebrow">⎯⎯ As Worn By ⎯⎯</div>
+    <h2>Creators who <em>get it</em></h2>
+    <p>Handpicked creators styling Wave 04. Tap to watch on Instagram/TikTok.</p>
+  </div>
+  <div class="creator-scroll">
+    <a class="reel" href="https://www.instagram.com/reel/PLACEHOLDER_1/" target="_blank" rel="noopener" style="background-image:url('https://images.unsplash.com/photo-1492288991661-058aa541ff43?w=500&q=80')">
+      <div class="reel-platform">IG</div><div class="reel-play"></div>
+      <div class="reel-info"><div class="reel-handle">@rahul.fits <span class="vtick">✓</span></div><div class="reel-stats"><span>▶ 248K</span><span>♡ 18.2K</span></div></div>
+    </a>
+    <a class="reel" href="https://www.tiktok.com/@PLACEHOLDER_USER/video/PLACEHOLDER_2" target="_blank" rel="noopener" style="background-image:url('https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=500&q=80')">
+      <div class="reel-platform">TT</div><div class="reel-play"></div>
+      <div class="reel-info"><div class="reel-handle">@komal.styled <span class="vtick">✓</span></div><div class="reel-stats"><span>▶ 542K</span><span>♡ 39K</span></div></div>
+    </a>
+    <a class="reel" href="https://www.instagram.com/reel/PLACEHOLDER_3/" target="_blank" rel="noopener" style="background-image:url('https://images.unsplash.com/photo-1488161628813-04466f872be2?w=500&q=80')">
+      <div class="reel-platform">IG</div><div class="reel-play"></div>
+      <div class="reel-info"><div class="reel-handle">@aniketkhanna</div><div class="reel-stats"><span>▶ 129K</span><span>♡ 9.1K</span></div></div>
+    </a>
+    <a class="reel" href="https://www.youtube.com/shorts/PLACEHOLDER_4" target="_blank" rel="noopener" style="background-image:url('https://images.unsplash.com/photo-1504593811423-6dd665756598?w=500&q=80')">
+      <div class="reel-platform">YT</div><div class="reel-play"></div>
+      <div class="reel-info"><div class="reel-handle">@tanya.wears <span class="vtick">✓</span></div><div class="reel-stats"><span>▶ 820K</span><span>♡ 52K</span></div></div>
+    </a>
+    <a class="reel" href="https://www.tiktok.com/@PLACEHOLDER_USER/video/PLACEHOLDER_5" target="_blank" rel="noopener" style="background-image:url('https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=500&q=80')">
+      <div class="reel-platform">TT</div><div class="reel-play"></div>
+      <div class="reel-info"><div class="reel-handle">@veer.k <span class="vtick">✓</span></div><div class="reel-stats"><span>▶ 315K</span><span>♡ 24K</span></div></div>
+    </a>
+  </div>
+  <div class="view-all-wrap"><a class="btn btn-ghost" href="https://www.instagram.com/vanta.in/" target="_blank" rel="noopener">See more on Instagram <span class="arrow">→</span></a></div>
+</section>
+
+<section class="blog" id="blog">
+  <div class="section-head">
+    <div class="eyebrow">⎯⎯ The Journal ⎯⎯</div>
+    <h2>Read, then <em>shop smarter</em></h2>
+    <p>Styling guides, behind-the-scenes on every drop, and the occasional hot take.</p>
+  </div>
+  <div class="blog-grid">
+    <article class="post">
+      <div class="post-cover" style="background-image:url('https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=800&q=80')"><span class="post-cat">Styling</span></div>
+      <div class="post-body">
+        <div class="post-meta"><span>14 Apr 2026</span><span class="dot"></span><span>5 min read</span></div>
+        <h3>5 ways to style the Signature Wave Tee this summer</h3>
+        <p>From streetwear layering to smart-casual — how our team styles the bestseller.</p>
+        <a href="#" class="read-more">Read more <span class="arrow">→</span></a>
+      </div>
+    </article>
+    <article class="post">
+      <div class="post-cover" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80')"><span class="post-cat">Behind the Drop</span></div>
+      <div class="post-body">
+        <div class="post-meta"><span>08 Apr 2026</span><span class="dot"></span><span>7 min read</span></div>
+        <h3>Why Wave 04 took us 8 months to make</h3>
+        <p>Tirupur sourcing trips, failed print runs, and a factory switch — the full story.</p>
+        <a href="#" class="read-more">Read more <span class="arrow">→</span></a>
+      </div>
+    </article>
+    <article class="post">
+      <div class="post-cover" style="background-image:url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80')"><span class="post-cat">Guide</span></div>
+      <div class="post-body">
+        <div class="post-meta"><span>02 Apr 2026</span><span class="dot"></span><span>4 min read</span></div>
+        <h3>The complete VANTA fit guide (finally)</h3>
+        <p>Not sure whether to size up? We measured every piece and made an honest chart.</p>
+        <a href="#" class="read-more">Read more <span class="arrow">→</span></a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="cta-banner">
+  <div class="cta-banner-content">
+    <h2>Get <em>10% off</em> your first order.</h2>
+    <p>Join 32,000+ readers getting early access to drops, restock alerts, styling guides.</p>
+    <form class="news-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓ You\'re in';this.querySelector('input').value='';">
+      <input type="email" placeholder="you@example.com" required />
+      <button type="submit">Claim 10% off</button>
+    </form>
+  </div>
+  <div class="cta-banner-visual"></div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="logo" href="index.html"><div class="logo-mark">V</div>VANTA</a>
+      <p>Premium streetwear in ocean-deep blues. Small runs, honest materials, shipped from Mumbai.</p>
+      <div class="foot-social"><a class="soc" href="#">IG</a><a class="soc" href="#">TT</a><a class="soc" href="#">YT</a><a class="soc" href="#">X</a></div>
+    </div>
+    <div><h4>Shop</h4><ul><li><a href="#">Wave 04</a></li><li><a href="#">T-Shirts</a></li><li><a href="#">Hoodies</a></li><li><a href="#">Caps</a></li></ul></div>
+    <div><h4>Support</h4><ul><li><a href="#">Shipping</a></li><li><a href="#">Returns</a></li><li><a href="#">Size Guide</a></li><li><a href="#">Track Order</a></li></ul></div>
+    <div><h4>Account</h4><ul><li><a href="login.html">Login</a></li><li><a href="account.html">My Account</a></li><li><a href="cart.html">Cart</a></li><li><a href="account.html">Orders</a></li></ul></div>
+    <div><h4>Legal</h4><ul><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Refunds</a></li></ul></div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2026 VANTA Apparel Pvt. Ltd. · Mumbai, India</div>
+    <div class="foot-pay"><span class="pay">UPI</span><span class="pay">VISA</span><span class="pay">MC</span><span class="pay">RUPAY</span><span class="pay">COD</span></div>
+  </div>
+</footer>
+
+<div class="mobile-cta">
+  <div class="mobile-cta-inner">
+    <div class="mobile-cta-price"><small>Starting from</small><strong>₹999</strong></div>
+    <a class="mobile-cta-btn" href="#shop">Shop Wave 04 →</a>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script type="module" src="firebase-init.js"></script>
+<script src="shared.js"></script>
+<script>
+  // Product catalog with category mapping
+  const CATALOG = [
+    { id:"wave-tee",         cat:"tees",    tag:"BESTSELLER", tagClass:"", rating:"4.8", reviews:284 },
+    { id:"heritage-tee",     cat:"tees",    tag:"NEW",        tagClass:"yellow", rating:"4.7", reviews:192 },
+    { id:"deep-blue-hoodie", cat:"hoodies", tag:"LIMITED",    tagClass:"red", rating:"4.9", reviews:147 },
+    { id:"circle-crest",     cat:"tees",    tag:"",           tagClass:"", rating:"4.6", reviews:98 },
+    { id:"wave-cap",         cat:"caps",    tag:"NEW",        tagClass:"yellow", rating:"4.8", reviews:64 },
+    { id:"wear-wave-tee",    cat:"tees",    tag:"",           tagClass:"", rating:"4.9", reviews:156 },
+    { id:"cloud-hoodie",     cat:"hoodies", tag:"",           tagClass:"", rating:"4.8", reviews:121 },
+    { id:"canvas-tote",      cat:"accs",    tag:"",           tagClass:"", rating:"4.7", reviews:89 }
+  ];
+
+  function renderProducts() {
+    const grid = document.getElementById("productGrid");
+    grid.innerHTML = CATALOG.map(p => {
+      const prod = window.VANTA_PRODUCTS[p.id];
+      const off = Math.round((1 - prod.price / prod.oldPrice) * 100);
+      return `
+        <div class="product" data-cat="${p.cat}">
+          <div class="product-media">
+            ${p.tag ? `<span class="tag ${p.tagClass}">${p.tag}</span>` : ""}
+            <button class="wishlist">♡</button>
+            <img src="${prod.image}" alt="${prod.title}"/>
+          </div>
+          <div class="product-body">
+            <div class="product-title">${prod.title}</div>
+            <div class="product-rating"><span class="rating-badge">${p.rating} ★</span><span>· ${p.reviews} reviews</span></div>
+            <div class="product-price-row">
+              <span class="product-price">${window.formatINR(prod.price)}</span>
+              <span class="price-old">${window.formatINR(prod.oldPrice)}</span>
+              <span class="price-off">${off}% off</span>
+            </div>
+            <div class="sizes" data-pid="${p.id}">
+              ${p.cat === "caps" ? `<div class="size selected">One Size</div><div class="size">Adjustable</div>`
+                : p.cat === "accs" ? `<div class="size selected">Standard</div>`
+                : `<div class="size">XS</div><div class="size">S</div><div class="size selected">M</div><div class="size">L</div><div class="size">XL</div><div class="size">XXL</div>`}
+            </div>
+            <button class="add-btn" data-pid="${p.id}">+ Add to Bag</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    // Size selector
+    document.querySelectorAll(".sizes").forEach(g => {
+      g.addEventListener("click", e => {
+        const s = e.target.closest(".size");
+        if (!s || s.classList.contains("disabled")) return;
+        g.querySelectorAll(".size").forEach(x => x.classList.remove("selected"));
+        s.classList.add("selected");
+      });
+    });
+
+    // Add to bag
+    document.querySelectorAll(".add-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const pid = btn.dataset.pid;
+        const prod = window.VANTA_PRODUCTS[pid];
+        const sizeEl = document.querySelector(`.sizes[data-pid="${pid}"] .size.selected`);
+        const size = sizeEl?.textContent.trim() || "M";
+        window.VantaCart.add({
+          id: pid,
+          title: prod.title,
+          size,
+          price: prod.price,
+          oldPrice: prod.oldPrice,
+          image: prod.image
+        });
+        const orig = btn.innerHTML;
+        btn.innerHTML = "✓ Added";
+        btn.classList.add("added");
+        window.VantaToast("Added to bag", "success");
+        setTimeout(() => { btn.innerHTML = orig; btn.classList.remove("added"); }, 1400);
+      });
+    });
+
+    // Wishlist
+    document.querySelectorAll(".wishlist").forEach(w => {
+      w.addEventListener("click", e => {
+        e.stopPropagation();
+        const on = w.textContent.trim() === "♡";
+        w.textContent = on ? "♥" : "♡";
+        w.style.color = on ? "#e63946" : "";
+      });
+    });
+
+    // Category tabs
+    document.querySelectorAll(".cat-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".cat-tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        const cat = tab.dataset.cat;
+        document.querySelectorAll("#productGrid .product").forEach(p => {
+          p.style.display = (cat === "all" || p.dataset.cat === cat) ? "" : "none";
+        });
+      });
+    });
+  }
+  renderProducts();
+
+  // Update account-avatar initial from auth
+  window.VantaAuth.onChange(user => {
+    const el = document.querySelector("[data-auth-initial]");
+    if (el && user) {
+      const name = user.displayName || user.email || "U";
+      el.textContent = name.trim().charAt(0).toUpperCase();
+    }
+  });
+</script>
+
+</body>
+</html>

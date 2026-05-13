@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Checkout · VANTA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<!-- Razorpay checkout script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+  .checkout-grid{display:grid;grid-template-columns:1fr 400px;gap:32px;align-items:start}
+  .checkout-section{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:28px;margin-bottom:20px}
+  .checkout-section h2{font-size:18px;color:var(--blue-ink);font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+  .step-num{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .form-row.three{grid-template-columns:1fr 1fr 1fr}
+
+  /* PAYMENT TABS */
+  .pay-tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+  .pay-tab{padding:14px;border:1.5px solid var(--line);border-radius:12px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+  .pay-tab.active{border-color:var(--blue);background:var(--blue-wash)}
+  .pay-tab.active::after{content:"✓";position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700}
+  .pay-tab-icon{font-size:22px;margin-bottom:4px}
+  .pay-tab-label{font-size:12px;font-weight:700;color:var(--blue-ink)}
+  .pay-tab-sub{font-size:10px;color:var(--ink-dim);margin-top:2px}
+  .pay-body{background:var(--blue-wash);border-radius:10px;padding:16px;font-size:13px;color:var(--ink-dim);line-height:1.5}
+  .pay-body strong{color:var(--blue-ink);display:block;margin-bottom:4px;font-size:14px}
+
+  /* Summary sidebar */
+  .checkout-summary{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:24px;position:sticky;top:90px}
+  .checkout-summary h3{font-size:16px;color:var(--blue-ink);margin-bottom:16px;font-weight:700}
+  .summary-items{margin-bottom:16px}
+  .summary-item{display:grid;grid-template-columns:50px 1fr auto;gap:10px;padding:10px 0;font-size:12px;align-items:center}
+  .summary-item + .summary-item{border-top:1px dashed var(--line)}
+  .summary-item-img{width:50px;height:60px;border-radius:6px;background-size:cover;background-position:center}
+  .summary-item-info strong{font-size:13px;color:var(--blue-ink);font-weight:600;display:block;line-height:1.2;margin-bottom:2px}
+  .summary-item-info small{color:var(--ink-dim);font-size:11px}
+  .summary-item-price{font-weight:700;color:var(--blue-ink);font-size:13px}
+  .sum-row{display:flex;justify-content:space-between;padding:8px 0;font-size:13px}
+  .sum-row.total{font-size:16px;font-weight:700;color:var(--blue-ink);border-top:1px dashed var(--line);padding-top:14px;margin-top:6px}
+  .sum-row .muted{color:var(--ink-dim)}
+  .sum-row .saved{color:var(--green);font-weight:700}
+
+  .place-order-btn{width:100%;padding:14px;background:var(--blue);color:#fff;border-radius:10px;font-weight:700;font-size:15px;margin-top:18px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+  .place-order-btn:hover:not(:disabled){background:var(--blue-bright);transform:translateY(-1px);box-shadow:0 10px 30px rgba(30,79,214,0.3)}
+  .place-order-btn:disabled{opacity:0.5;cursor:not-allowed}
+
+  .lock-note{font-size:11px;color:var(--ink-dim);text-align:center;margin-top:12px}
+
+  @media (max-width:900px){
+    .checkout-grid{grid-template-columns:1fr}
+    .checkout-summary{position:static}
+    .form-row,.form-row.three{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar"><span>🔒 Secure checkout · Your info is encrypted</span></div>
+
+<nav>
+  <a class="logo" href="index.html"><div class="logo-mark">V</div>VANTA</a>
+  <div class="nav-links" style="opacity:0.5;pointer-events:none">
+    <span>Step 2 of 3 · Checkout</span>
+  </div>
+  <div class="nav-actions">
+    <a href="cart.html" class="account-btn"><span>← Back to Bag</span></a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="page-title"><em>Checkout</em></div>
+    <div class="page-sub">Just one step to your Wave 04 fit</div>
+  </div>
+
+  <div class="checkout-grid" id="checkoutRoot">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script type="module" src="firebase-init.js"></script>
+<script src="shared.js"></script>
+<script>
+  const COUPONS = {
+    "FIRST10": { type: "percent", value: 10, label: "10% off" },
+    "WAVE20":  { type: "percent", value: 20, label: "20% off" },
+    "FREESHIP":{ type: "shipping", value: 0, label: "Free shipping" }
+  };
+
+  let selectedPayment = "upi";
+
+  function render() {
+    const items = window.VantaCart.getAll();
+    if (items.length === 0) {
+      document.getElementById("checkoutRoot").innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:80px 20px;background:var(--blue-wash);border-radius:16px">
+          <h2 style="margin-bottom:12px">Nothing in your bag</h2>
+          <p style="color:var(--ink-dim);margin-bottom:20px">Add something first.</p>
+          <a class="btn btn-primary" href="index.html#shop">Shop Wave 04 →</a>
+        </div>`;
+      return;
+    }
+
+    const totals = window.VantaCart.totals();
+    const couponCode = sessionStorage.getItem("vanta_coupon");
+    let discount = 0, freeShip = false;
+    if (couponCode && COUPONS[couponCode]) {
+      const c = COUPONS[couponCode];
+      if (c.type === "percent") discount = Math.round(totals.subtotal * c.value / 100);
+      if (c.type === "shipping") freeShip = true;
+    }
+    const shipping = freeShip ? 0 : totals.shipping;
+    const finalTotal = totals.subtotal - discount + totals.gst + shipping;
+
+    const user = window.VantaAuth.currentUser;
+
+    document.getElementById("checkoutRoot").innerHTML = `
+      <div>
+        <!-- CONTACT + ADDRESS -->
+        <form class="checkout-section" id="addressForm">
+          <h2><span class="step-num">1</span> Contact & shipping address</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full name</label>
+              <input type="text" id="fld_name" required value="${user?.displayName || ''}" />
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="tel" id="fld_phone" required pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="fld_email" required value="${user?.email || ''}" />
+          </div>
+
+          <div class="form-group">
+            <label>Address line 1</label>
+            <input type="text" id="fld_addr1" required placeholder="House/Flat no., Building, Street" />
+          </div>
+
+          <div class="form-group">
+            <label>Address line 2 <span style="color:var(--ink-dim);font-weight:400">(optional)</span></label>
+            <input type="text" id="fld_addr2" placeholder="Landmark, Area" />
+          </div>
+
+          <div class="form-row three">
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" id="fld_city" required placeholder="Mumbai" />
+            </div>
+            <div class="form-group">
+              <label>State</label>
+              <select id="fld_state" required>
+                <option value="">Select state</option>
+                <option>Maharashtra</option><option>Karnataka</option><option>Delhi</option>
+                <option>Tamil Nadu</option><option>Telangana</option><option>West Bengal</option>
+                <option>Gujarat</option><option>Rajasthan</option><option>Uttar Pradesh</option>
+                <option>Madhya Pradesh</option><option>Kerala</option><option>Punjab</option>
+                <option>Haryana</option><option>Andhra Pradesh</option><option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Pincode</label>
+              <input type="text" id="fld_pin" required pattern="[0-9]{6}" maxlength="6" placeholder="400001" />
+            </div>
+          </div>
+        </form>
+
+        <!-- PAYMENT -->
+        <div class="checkout-section">
+          <h2><span class="step-num">2</span> Payment method</h2>
+
+          <div class="pay-tabs">
+            <div class="pay-tab active" data-pay="upi">
+              <div class="pay-tab-icon">📱</div>
+              <div class="pay-tab-label">UPI</div>
+              <div class="pay-tab-sub">GPay · PhonePe · Paytm</div>
+            </div>
+            <div class="pay-tab" data-pay="card">
+              <div class="pay-tab-icon">💳</div>
+              <div class="pay-tab-label">Card</div>
+              <div class="pay-tab-sub">Credit / Debit</div>
+            </div>
+            <div class="pay-tab" data-pay="cod">
+              <div class="pay-tab-icon">💵</div>
+              <div class="pay-tab-label">Cash on Delivery</div>
+              <div class="pay-tab-sub">Pay on arrival</div>
+            </div>
+          </div>
+
+          <div class="pay-body" id="payBody">
+            <strong>UPI payment</strong>
+            Pay via GPay, PhonePe, Paytm, or any UPI app. Razorpay secure gateway. Takes under 30 seconds.
+          </div>
+        </div>
+      </div>
+
+      <aside class="checkout-summary">
+        <h3>Your order · ${items.length} item${items.length !== 1 ? 's' : ''}</h3>
+        <div class="summary-items">
+          ${items.map(it => `
+            <div class="summary-item">
+              <div class="summary-item-img" style="background-image:url('${it.image}')"></div>
+              <div class="summary-item-info">
+                <strong>${it.title}</strong>
+                <small>Size: ${it.size} · Qty: ${it.qty}</small>
+              </div>
+              <div class="summary-item-price">${window.formatINR(it.price * it.qty)}</div>
+            </div>
+          `).join("")}
+        </div>
+        <div class="sum-row"><span class="muted">Subtotal</span><span>${window.formatINR(totals.subtotal)}</span></div>
+        ${discount > 0 ? `<div class="sum-row"><span class="muted">Coupon (${couponCode})</span><span class="saved">−${window.formatINR(discount)}</span></div>` : ""}
+        <div class="sum-row"><span class="muted">GST (5%)</span><span>${window.formatINR(totals.gst)}</span></div>
+        <div class="sum-row"><span class="muted">Shipping</span><span>${shipping === 0 ? '<span class="saved">FREE</span>' : window.formatINR(shipping)}</span></div>
+        <div class="sum-row total"><span>Total</span><span>${window.formatINR(finalTotal)}</span></div>
+
+        <button class="place-order-btn" id="placeOrderBtn">
+          <span id="btnText">Place Order · ${window.formatINR(finalTotal)}</span>
+        </button>
+        <div class="lock-note">🔒 256-bit SSL encryption · Razorpay</div>
+      </aside>
+    `;
+
+    // Payment tabs
+    document.querySelectorAll(".pay-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".pay-tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        selectedPayment = tab.dataset.pay;
+        const body = document.getElementById("payBody");
+        if (selectedPayment === "upi") {
+          body.innerHTML = "<strong>UPI payment</strong>Pay via GPay, PhonePe, Paytm, or any UPI app. Razorpay secure gateway. Takes under 30 seconds.";
+        } else if (selectedPayment === "card") {
+          body.innerHTML = "<strong>Credit / Debit Card</strong>Visa, Mastercard, RuPay, Amex. Secure Razorpay modal will open when you place the order.";
+        } else {
+          body.innerHTML = "<strong>Cash on Delivery</strong>Pay ₹" + finalTotal.toLocaleString("en-IN") + " in cash when our delivery partner arrives. ₹49 COD handling fee applies.";
+        }
+      });
+    });
+
+    // Place order
+    document.getElementById("placeOrderBtn").addEventListener("click", () => placeOrder(finalTotal, { items, totals, discount, shipping, couponCode }));
+  }
+
+  async function placeOrder(amount, orderData) {
+    // Validate form
+    const form = document.getElementById("addressForm");
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      window.VantaToast("Please fill all address fields", "error");
+      return;
+    }
+
+    const address = {
+      name: document.getElementById("fld_name").value.trim(),
+      phone: document.getElementById("fld_phone").value.trim(),
+      email: document.getElementById("fld_email").value.trim(),
+      line1: document.getElementById("fld_addr1").value.trim(),
+      line2: document.getElementById("fld_addr2").value.trim(),
+      city: document.getElementById("fld_city").value.trim(),
+      state: document.getElementById("fld_state").value,
+      pincode: document.getElementById("fld_pin").value.trim()
+    };
+
+    const btn = document.getElementById("placeOrderBtn");
+    btn.disabled = true;
+    document.getElementById("btnText").textContent = "Processing...";
+
+    if (selectedPayment === "cod") {
+      // COD — skip payment gateway, create order directly
+      const cod_total = amount + 49; // COD fee
+      await saveOrderAndRedirect({
+        ...orderData,
+        address,
+        payment: { method: "cod", status: "pending", amount: cod_total },
+        amount: cod_total
+      });
+      return;
+    }
+
+    // Razorpay flow (UPI or Card)
+    if (!window.VANTA_READY) {
+      // DEMO MODE — simulate payment
+      window.VantaToast("Demo mode: simulating Razorpay payment...", "info");
+      setTimeout(async () => {
+        await saveOrderAndRedirect({
+          ...orderData,
+          address,
+          payment: { method: selectedPayment, status: "paid", amount, paymentId: "pay_demo_" + Date.now() },
+          amount
+        });
+      }, 1500);
+      return;
+    }
+
+    // Real Razorpay
+    const options = {
+      key: window.RAZORPAY_KEY_ID,
+      amount: amount * 100, // paise
+      currency: "INR",
+      name: "VANTA",
+      description: `Wave 04 · ${orderData.items.length} items`,
+      image: "", // optional logo URL
+      prefill: {
+        name: address.name,
+        email: address.email,
+        contact: address.phone
+      },
+      notes: {
+        address: `${address.line1}, ${address.city}`
+      },
+      theme: { color: "#1e4fd6" },
+      method: selectedPayment === "upi" ? { upi: true } : { card: true },
+      handler: async (response) => {
+        // Payment successful
+        await saveOrderAndRedirect({
+          ...orderData,
+          address,
+          payment: {
+            method: selectedPayment,
+            status: "paid",
+            amount,
+            paymentId: response.razorpay_payment_id,
+            orderId: response.razorpay_order_id || null,
+            signature: response.razorpay_signature || null
+          },
+          amount
+        });
+      },
+      modal: {
+        ondismiss: () => {
+          btn.disabled = false;
+          document.getElementById("btnText").textContent = `Place Order · ${window.formatINR(amount)}`;
+          window.VantaToast("Payment cancelled", "info");
+        }
+      }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.on("payment.failed", (resp) => {
+      console.error(resp.error);
+      btn.disabled = false;
+      document.getElementById("btnText").textContent = `Place Order · ${window.formatINR(amount)}`;
+      window.VantaToast("Payment failed: " + resp.error.description, "error");
+    });
+    rzp.open();
+  }
+
+  async function saveOrderAndRedirect(order) {
+    const user = window.VantaAuth.currentUser;
+    const orderId = "VNT-" + Date.now().toString().slice(-8);
+    const orderRecord = {
+      orderId,
+      userId: user?.uid || "guest",
+      userEmail: user?.email || order.address.email,
+      items: order.items,
+      address: order.address,
+      payment: order.payment,
+      subtotal: order.totals.subtotal,
+      gst: order.totals.gst,
+      shipping: order.shipping,
+      discount: order.discount,
+      couponCode: order.couponCode || null,
+      total: order.amount,
+      status: order.payment.method === "cod" ? "confirmed" : "paid",
+      createdAt: new Date().toISOString()
+    };
+
+    // Save to Firestore if available, else localStorage (demo)
+    try {
+      if (window.VANTA_READY && window.VantaFB?.db) {
+        await window.VantaFB.addDoc(
+          window.VantaFB.collection(window.VantaFB.db, "orders"),
+          { ...orderRecord, createdAt: window.VantaFB.serverTimestamp() }
+        );
+      } else {
+        window.VantaDemo.saveOrder(orderRecord);
+      }
+    } catch (err) {
+      console.error("Failed to save order:", err);
+      // Save to demo as fallback so user still gets success screen
+      window.VantaDemo.saveOrder(orderRecord);
+    }
+
+    // Cache for success page
+    sessionStorage.setItem("vanta_last_order", JSON.stringify(orderRecord));
+
+    // Clear cart + coupon
+    window.VantaCart.clear();
+    sessionStorage.removeItem("vanta_coupon");
+
+    // Redirect
+    location.href = "success.html";
+  }
+
+  // Auth gate
+  function init() {
+    if (!window.VantaAuth.currentUser) {
+      window.VantaToast("Please login to checkout", "info");
+      setTimeout(() => location.href = "login.html?redirect=checkout.html", 800);
+      return;
+    }
+    render();
+  }
+
+  if (window.VantaAuth.currentUser !== undefined) init();
+  else window.VantaAuth.onChange(() => init());
+</script>
+
+</body>
+</html>
